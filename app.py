@@ -1,12 +1,6 @@
 import streamlit as st
 import anthropic
-import json
-import os
 from pathlib import Path
-from dotenv import load_dotenv
-
-# Загрузка переменных окружения из .env
-load_dotenv()
 
 # Конфигурация страницы
 st.set_page_config(
@@ -62,34 +56,14 @@ def main():
     st.title("🎨 АКЗ Консультант")
     st.markdown("*Эксперт по антикоррозийной защите металлоконструкций*")
 
-    # Сайдбар с настройками
+    # API ключ из Secrets (без поля ввода для пользователей)
+    api_key = st.secrets["ANTHROPIC_API_KEY"]
+
+    # Сайдбар с информацией
     with st.sidebar:
-        st.header("⚙️ Настройки")
-
-        # Получаем API ключ из secrets (Streamlit Cloud) или env
-        default_key = ""
-        try:
-            default_key = st.secrets.get("ANTHROPIC_API_KEY", "")
-        except:
-            default_key = os.getenv("ANTHROPIC_API_KEY", "")
-
-        api_key = st.text_input(
-            "Anthropic API Key",
-            type="password",
-            value=default_key,
-            help="Получите ключ на console.anthropic.com"
-        )
-
-        if api_key:
-            st.success("API ключ установлен")
-        else:
-            st.warning("Введите API ключ для работы")
-
-        st.divider()
+        st.header("ℹ️ О консультанте")
 
         st.markdown("""
-        ### О консультанте
-
         Этот AI-консультант обучен на базе **18 000+ сообщений**
         из профессионального сообщества специалистов по АКЗ.
 
@@ -99,6 +73,8 @@ def main():
         - Настройка оборудования
         - Решение технических проблем
         - Расчёт расхода материалов
+
+        🌐 [ATI1.SU](https://ati1.su)
         """)
 
         if st.button("🗑️ Очистить историю"):
@@ -119,9 +95,6 @@ def main():
 
     # Поле ввода
     if prompt := st.chat_input("Задайте вопрос по АКЗ..."):
-        if not api_key:
-            st.error("Пожалуйста, введите API ключ в настройках")
-            return
 
         # Добавляем сообщение пользователя
         st.session_state.messages.append({"role": "user", "content": prompt})
