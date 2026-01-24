@@ -1,5 +1,6 @@
 import streamlit as st
 import anthropic
+import os
 from pathlib import Path
 
 # Конфигурация страницы
@@ -56,8 +57,8 @@ def main():
     st.title("🎨 АКЗ Консультант")
     st.markdown("*Эксперт по антикоррозийной защите металлоконструкций*")
 
-    # API ключ из Secrets (без поля ввода для пользователей)
-    api_key = st.secrets["ANTHROPIC_API_KEY"]
+    # API ключ из переменных окружения (Railway) или Secrets (Streamlit Cloud)
+    api_key = os.environ.get("ANTHROPIC_API_KEY") or st.secrets.get("ANTHROPIC_API_KEY", "")
 
     # Сайдбар с информацией
     with st.sidebar:
