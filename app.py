@@ -58,7 +58,12 @@ def main():
     st.markdown("*Эксперт по антикоррозийной защите металлоконструкций*")
 
     # API ключ из переменных окружения (Railway) или Secrets (Streamlit Cloud)
-    api_key = os.environ.get("ANTHROPIC_API_KEY") or st.secrets.get("ANTHROPIC_API_KEY", "")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        try:
+            api_key = st.secrets["ANTHROPIC_API_KEY"]
+        except Exception:
+            api_key = ""
 
     # Сайдбар с информацией
     with st.sidebar:
